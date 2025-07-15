@@ -2,18 +2,26 @@ const express = require('express');
 
 const app = express();
 
-//request handler function
+const {adminAuth,userAuth} = require('./middleware/auth')
+//handle auth midleware for all the request get , post.
+ app.use("/admin", adminAuth);
+   
+ app.get('/user',userAuth ,(req,res,next)=>{
+   res.send("user data send");
+   next()
+ })
+ app.get('/admin/getAllData',(req,res, next)=>{
+   //check if the request is actually authenticated
+   //logic of checking
+    res.send("all data send ")
+    next();
 
-app.use("/",(req,res) => {
-    res.send("hello from home");
-})
+ })
+ app.get('/admin/deleteAllData',(req,res)=>{
+   //logic of checking of request
+    res.send("deleted all data ")
 
-app.use("/hello",(req ,res)=>{
-    res.send("hello this is response from the hello route")
-})
-app.use("/test",( req,res)=> {
-    res.send("hello from the server ")
-})
+ })
 app.listen(3000 , () => {
     console.log("server is sucessfully ");
 });

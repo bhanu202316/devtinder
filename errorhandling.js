@@ -34,4 +34,3 @@ app.listen(3000 , () => {
 });
 
 //proper way of writng error handling ... is try and catch
-

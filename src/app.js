@@ -1,7 +1,8 @@
 const express = require('express');
 const connectDB = require('./config/database')
 const app = express();
-const User  = require("./models/user")
+const User  = require("./models/user");
+const user = require('./models/user');
 
 app.use(express.json());
 app.post("/signup", async (req,res)=>{
@@ -12,17 +13,42 @@ app.post("/signup", async (req,res)=>{
   //   lastName: "roy",
   //   emailId: "rahul@roy.com",
   //   password : "rauroy@1000",
-    
-  // });
-  
-  try{ 
-  await user.save();
-  res.send("user added succssfully")
-}
-catch (err){
-  res.status(400).send("user not added ",+err.message)
-}});
+});
+app.get('/user', async (req,res)=>{
+  const userEmail = req.body.emailId;
 
+  try{
+    const user = await User.findOne({emailId: userEmail});
+    if(!user){
+      res.status(404).send("user not found");
+    }
+    else{
+      res.send(user);
+
+    }
+  //   const user =  await User.find({emailId: userEmail});
+  //   if(user.length === 0){
+  //     res.status(404).send("user not found")
+  //   }
+  //   else{
+  //     res.send(user)
+  //   }   
+  }
+  catch(err){
+    res.status(400).send("something went wrong")
+  }
+})
+
+  // find user by emial 
+app.get("/feed", async(req,res)=>{
+  try{
+    const users = await User.find({});
+    res.send(users)
+  }
+  catch(err){
+    res.status(400).send("something went wrong");
+  }
+})
 connectDB().then(()=>{
     console.log("database connection established")
     app.listen(3000 , () => {
@@ -35,5 +61,4 @@ connectDB().then(()=>{
 });
 
 
-//proper way of writng error handling ... is try and catch
-
+//proper way of writng error handling ... is try and 
